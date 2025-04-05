@@ -10,11 +10,13 @@ public class Deck : MonoBehaviour
 
     private List<Card> cardList = new();
     private Stack<Card> deckStack = new();
+    private int runningCount;
 
 
     void Awake()
     {
-        CreateDeck();
+        runningCount = 0;
+        CreateStack();
     }
 
     void Update()
@@ -75,8 +77,8 @@ public class Deck : MonoBehaviour
         }
     }
 
-    // Creates a shuffled and stacked deck of cards
-    public void CreateDeck()
+    // Creates a shuffled stack of cards
+    public void CreateStack()
     {
         CreateList(deckSize);
         ShuffleList(cardList);
@@ -89,11 +91,30 @@ public class Deck : MonoBehaviour
         if (deckStack.Count == 0)
         {
             Debug.Log("Deck Empty!");
+            Debug.Log("Running Count: " + runningCount);
         }
         else
         {
             Card dealtCard = deckStack.Pop();
+            HiLoCount(dealtCard);
             Debug.Log("Deal: " + dealtCard.Name);
+            Debug.Log("Running Count: " + runningCount);
+        }
+    }
+
+    private void HiLoCount(Card card)
+    {
+        if(card.number >= 2 && card.number <= 6)
+        {
+            runningCount++;
+        }
+        else if (card.number == 10 || card.number == 11 || card.number == 12 || card.number == 13 || card.number == 14)
+        {
+            runningCount--;
+        }
+        else
+        {
+            return;
         }
     }
 }
