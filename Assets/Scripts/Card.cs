@@ -7,6 +7,7 @@ public class Card
         this.Number = Value;
         this.Suite = Suite;
     }
+
     public enum Suites
     {
         Hearts = 0,
@@ -27,8 +28,6 @@ public class Card
         set;
     }
 
-    //Used to get full name, also useful 
-    //if you want to just get the named value
     public string NamedValue
     {
         get

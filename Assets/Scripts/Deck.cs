@@ -12,10 +12,8 @@ public class Deck : MonoBehaviour
     private Stack<Card> deckStack = new();
     private int runningCount;
 
-
     void Awake()
     {
-        runningCount = 0;
         CreateStack();
     }
 
@@ -28,7 +26,7 @@ public class Deck : MonoBehaviour
     }
    
     // Creates the card list
-    public void CreateList(int size)
+    private void CreateList(int size)
     {
         for (int j = 0; j < size; j++)
         {
@@ -51,7 +49,7 @@ public class Deck : MonoBehaviour
     }
 
     // Shuffles the card list
-    public void ShuffleList<T>(List<T> list)
+    private void ShuffleList<T>(List<T> list)
     {
         RNGCryptoServiceProvider provider = new RNGCryptoServiceProvider();
         int n = list.Count;
@@ -69,7 +67,7 @@ public class Deck : MonoBehaviour
     }
 
     // Transforms card list into a stack
-    public void StackDeck()
+    private void StackDeck()
     {
         foreach (Card card in this.cardList)
         {
@@ -83,6 +81,7 @@ public class Deck : MonoBehaviour
         CreateList(deckSize);
         ShuffleList(cardList);
         StackDeck();
+        runningCount = 0;
     }
 
     // Deals a card from the top of the stack
@@ -104,6 +103,7 @@ public class Deck : MonoBehaviour
         }
     }
 
+    // Counts the a card using the High Low system
     private void HiLoCount(Card card)
     {
         if(card.Number >= 2 && card.Number <= 6)
