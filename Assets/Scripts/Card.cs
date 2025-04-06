@@ -1,9 +1,11 @@
+using UnityEngine;
+
 public class Card
 {
     public Card(int Value, Suites Suite)
     {
-        this.number = Value;
-        this.suite = Suite;
+        this.Number = Value;
+        this.Suite = Suite;
     }
     public enum Suites
     {
@@ -13,13 +15,13 @@ public class Card
         Spades
     }
 
-    public int number
+    public int Number
     {
         get;
         set;
     }
 
-    public Suites suite
+    public Suites Suite
     {
         get;
         set;
@@ -32,7 +34,7 @@ public class Card
         get
         {
             string name = string.Empty;
-            switch (number)
+            switch (Number)
             {
                 case (14):
                     name = "Ace";
@@ -47,7 +49,7 @@ public class Card
                     name = "Jack";
                     break;
                 default:
-                    name = number.ToString();
+                    name = Number.ToString();
                     break;
             }
 
@@ -59,7 +61,17 @@ public class Card
     {
         get
         {
-            return NamedValue + " of  " + suite.ToString();
+            return NamedValue + " of  " + Suite.ToString();
+        }
+    }
+
+    public Sprite Face
+    {
+        get
+        {
+            string path = Suite.ToString() + " " + (Number == 14 ? 1 : Number).ToString();
+            Sprite texture = Resources.Load<Sprite>(path);
+            return texture;
         }
     }
 }

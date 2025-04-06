@@ -4,8 +4,8 @@ using UnityEngine;
 using System.Security.Cryptography;
 
 public class Deck : MonoBehaviour
-{
-    // How many 52 card decks to create
+{ 
+    [SerializeField] private SpriteRenderer cardDisplay;
     [SerializeField] private int deckSize;
 
     private List<Card> cardList = new();
@@ -92,11 +92,13 @@ public class Deck : MonoBehaviour
         {
             Debug.Log("Deck Empty!");
             Debug.Log("Running Count: " + runningCount);
+            cardDisplay.sprite = Resources.Load<Sprite>("Card Back 3");
         }
         else
         {
             Card dealtCard = deckStack.Pop();
             HiLoCount(dealtCard);
+            cardDisplay.sprite = dealtCard.Face;
             Debug.Log("Deal: " + dealtCard.Name);
             Debug.Log("Running Count: " + runningCount);
         }
@@ -104,11 +106,11 @@ public class Deck : MonoBehaviour
 
     private void HiLoCount(Card card)
     {
-        if(card.number >= 2 && card.number <= 6)
+        if(card.Number >= 2 && card.Number <= 6)
         {
             runningCount++;
         }
-        else if (card.number == 10 || card.number == 11 || card.number == 12 || card.number == 13 || card.number == 14)
+        else if (card.Number == 10 || card.Number == 11 || card.Number == 12 || card.Number == 13 || card.Number == 14)
         {
             runningCount--;
         }
