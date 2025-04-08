@@ -5,9 +5,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
-    [SerializeField] private SpriteRenderer cardDisplay;
+    [SerializeField] private SpriteRenderer cardRenderer;
     [SerializeField] private int deckSize;
-    private List<Hand> playerHands = new();
+    private readonly List<Hand> houseHand = new();
+    private readonly List<Hand> playerHands = new();
     private Deck deck;
     private Card dealtCard;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -22,20 +23,14 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-
         deck = new Deck(deckSize);
-        playerHands.Add(new Hand());
+        NewHand();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            dealtCard = deck.DealCard();
-            playerHands[0].GetCard(dealtCard);
-            cardDisplay.sprite = dealtCard.Face;
-        }
+
     }
 
     public void Bust()
@@ -48,9 +43,35 @@ public class GameManager : MonoBehaviour
         Debug.Log("Blackjack!");
     }
 
-    private void Reset()
+    private void NewHand()
     {
-        deck = new Deck(deckSize);
+        houseHand.Clear();
         playerHands.Clear();
+        playerHands.Add(new Hand());
+        houseHand.Add(new Hand());
+
+        for(int i = 0; i < 2; i++)
+        {
+            dealtCard = deck.DealCard();
+            playerHands[0].GetCard(dealtCard);
+            CreateCard(dealtCard.Face);
+
+            dealtCard = deck.DealCard();
+            houseHand[0].GetCard(dealtCard);
+            CreateCard(dealtCard.Face);
+        }
+    }
+
+    public void Hit()
+    {
+        dealtCard = deck.DealCard();
+        playerHands[0].GetCard(dealtCard);
+        CreateCard(dealtCard.Face);
+    }
+        
+   private void CreateCard(Sprite sprite)
+    {
+        SpriteRenderer cardDisplay = Instantiate(cardRenderer, new Vector3(0, 0, -1), Quaternion.identity);
+        cardDisplay.sprite = sprite;
     }
 }

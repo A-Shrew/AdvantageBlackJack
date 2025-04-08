@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 public class Deck
 { 
-    private int deckSize;
+    private readonly int deckSize;
     private readonly List<Card> cardList = new();
     private readonly Stack<Card> deckStack = new();
     private readonly Dictionary<int,int> remainingCards = new();
@@ -122,11 +122,10 @@ public class Deck
         else
         {
             Card dealtCard = deckStack.Pop();
-            HiLoCount(dealtCard);
             remainingCards[dealtCard.Number]--;
-            Debug.Log("Deal: " + dealtCard.Name);
+            HiLoCount(dealtCard);
             Debug.Log("Running Count: " + runningCount);
-            PrintRemainingCards();
+            Debug.Log("True Count: " + (runningCount / (deckStack.Count / 52)));
             return dealtCard;
         }
     }
