@@ -3,26 +3,18 @@ using System;
 using UnityEngine;
 using System.Security.Cryptography;
 
-public class Deck : MonoBehaviour
+public class Deck
 { 
-    [SerializeField] private SpriteRenderer cardDisplay;
-    [SerializeField] private int deckSize;
-
-    private List<Card> cardList = new();
-    private Stack<Card> deckStack = new();
+    private int deckSize;
+    private readonly List<Card> cardList = new();
+    private readonly Stack<Card> deckStack = new();
+    private readonly Dictionary<int,int> remainingCards = new();
     private int runningCount;
 
-    void Awake()
+    public Deck(int size)
     {
+        this.deckSize = size;
         CreateStack();
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            DealCard();
-        }
     }
    
     // Creates the card list
@@ -35,7 +27,13 @@ public class Deck : MonoBehaviour
                 Card.Suites suite = (Card.Suites)(Math.Floor((decimal)i / 13));
                 int val = i % 13 + 2;
                 cardList.Add(new Card(val, suite));
+                Debug.Log(val);
             }
+            
+        }
+        for(int k = 2; k < 15; k++)
+        {
+            remainingCards.Add(k, 4 * size);
         }
     }
 
@@ -45,6 +43,34 @@ public class Deck : MonoBehaviour
         foreach (Card card in this.cardList)
         {
             Debug.Log(card.Name);
+        }
+    }
+
+    // Prints the total number of each card remaining the deck
+    public void PrintRemainingCards()
+    {
+        String cardTitle = string.Empty;
+        for (int k = 2; k < 15; k++)
+        {
+            switch (k)
+            {
+                case (14):
+                    cardTitle = "Ace";
+                    break;
+                case (13):
+                    cardTitle = "King";
+                    break;
+                case (12):
+                    cardTitle = "Queen";
+                    break;
+                case (11):
+                    cardTitle = "Jack";
+                    break;
+                default:
+                    cardTitle = k.ToString();
+                    break;
+            }
+            Debug.Log(cardTitle +"'s remaining: " + remainingCards[k]);
         }
     }
 
@@ -85,21 +111,23 @@ public class Deck : MonoBehaviour
     }
 
     // Deals a card from the top of the stack
-    public void DealCard()
+    public Card DealCard()
     {
         if (deckStack.Count == 0)
         {
             Debug.Log("Deck Empty!");
             Debug.Log("Running Count: " + runningCount);
-            cardDisplay.sprite = Resources.Load<Sprite>("Card Back 3");
+            return null;
         }
         else
         {
             Card dealtCard = deckStack.Pop();
             HiLoCount(dealtCard);
-            cardDisplay.sprite = dealtCard.Face;
+            remainingCards[dealtCard.Number]--;
             Debug.Log("Deal: " + dealtCard.Name);
             Debug.Log("Running Count: " + runningCount);
+            PrintRemainingCards();
+            return dealtCard;
         }
     }
 
