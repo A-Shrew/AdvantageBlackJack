@@ -125,7 +125,6 @@ public class Deck
             remainingCards[dealtCard.Number]--;
             HiLoCount(dealtCard);
             Debug.Log("Running Count: " + runningCount);
-            Debug.Log("True Count: " + (runningCount / (deckStack.Count / 52)));
             return dealtCard;
         }
     }

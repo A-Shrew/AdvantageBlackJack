@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public void Bust()
     { 
         Debug.Log("Bust! " + playerHands[0].handValue);
+
     }
 
     public void Blackjack()
@@ -43,7 +44,7 @@ public class GameManager : MonoBehaviour
         Debug.Log("Blackjack!");
     }
 
-    private void NewHand()
+    public void NewHand()
     {
         houseHand.Clear();
         playerHands.Clear();
@@ -68,7 +69,30 @@ public class GameManager : MonoBehaviour
         playerHands[0].GetCard(dealtCard);
         CreateCard(dealtCard.Face);
     }
-        
+
+    public void Stand()
+    {
+        ComputerPlay();
+    }
+
+    private void ComputerPlay()
+    {
+        while(houseHand[0].handValue < 17)
+        {
+            dealtCard = deck.DealCard();
+            houseHand[0].GetCard(dealtCard);
+            CreateCard(dealtCard.Face);
+        }
+        if(houseHand[0].handValue > playerHands[0].handValue && houseHand[0].handValue <= 21)
+        {
+            Debug.Log("House Wins!");
+        }
+        else
+        {
+            Debug.Log("Player Wins!");
+        }
+        NewHand();
+    }
    private void CreateCard(Sprite sprite)
     {
         SpriteRenderer cardDisplay = Instantiate(cardRenderer, new Vector3(0, 0, -1), Quaternion.identity);
