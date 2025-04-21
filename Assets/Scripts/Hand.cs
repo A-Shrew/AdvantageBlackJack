@@ -11,11 +11,11 @@ public class Hand
         handValue = 0;
         cards = new();
     }
-    
+
     public void GetCard(Card card)
     {
         cards.Add(card);
-        if(card.Number == 14)
+        if (card.Number == 14)
         {
             if (handValue + 11 > 21)
             {
@@ -31,24 +31,8 @@ public class Hand
             handValue += 10;
         }
         else
+        {
             handValue += card.Number;
-
-        CheckHand();
-    }
-
-    private void CheckHand()
-    {
-        if (handValue > 21)
-        {
-          GameManager.Instance.Bust();
-        }
-        else if (handValue == 21)
-        {
-          GameManager.Instance.Blackjack();
-        }
-        else
-        {
-            Debug.Log("Hand total: " + handValue);
         }
     }
 }

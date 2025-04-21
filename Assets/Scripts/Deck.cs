@@ -27,7 +27,6 @@ public class Deck
                 Card.Suites suite = (Card.Suites)(Math.Floor((decimal)i / 13));
                 int val = i % 13 + 2;
                 cardList.Add(new Card(val, suite));
-                Debug.Log(val);
             }
             
         }
@@ -124,7 +123,7 @@ public class Deck
             Card dealtCard = deckStack.Pop();
             remainingCards[dealtCard.Number]--;
             HiLoCount(dealtCard);
-            Debug.Log("Running Count: " + runningCount);
+            //Debug.Log("Running Count: " + runningCount);
             return dealtCard;
         }
     }

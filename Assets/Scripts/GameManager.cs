@@ -1,16 +1,26 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
-
     [SerializeField] private SpriteRenderer cardRenderer;
+    [SerializeField] private Button hit;
+    [SerializeField] private Button stand;
+    [SerializeField] private Button reset;
+    [SerializeField] private Transform houseDisplay;
+    [SerializeField] private Transform playerDisplay;
     [SerializeField] private int deckSize;
-    private readonly List<Hand> houseHand = new();
-    private readonly List<Hand> playerHands = new();
+    [SerializeField] private float displaySpacing;
+
     private Deck deck;
     private Card dealtCard;
+    private readonly List<Hand> houseHand = new();
+    private readonly List<Hand> playerHands = new();
+    private int playerCardCount;
+    private int houseCardCount;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -27,39 +37,44 @@ public class GameManager : MonoBehaviour
         NewHand();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void Bust()
     { 
         Debug.Log("Bust! " + playerHands[0].handValue);
-
+        hit.interactable = false;
+        stand.interactable = false;
+        Stand();
     }
 
     public void Blackjack()
     {
         Debug.Log("Blackjack!");
+        hit.interactable = false;
+        stand.interactable = false;
+        Stand();
     }
 
     public void NewHand()
     {
+        //Reset Buttons
+        hit.interactable = true;
+        stand.interactable = true;
+
+        //Reset Hands
         houseHand.Clear();
         playerHands.Clear();
         playerHands.Add(new Hand());
         houseHand.Add(new Hand());
 
+        //Deal two cards to each player
         for(int i = 0; i < 2; i++)
         {
             dealtCard = deck.DealCard();
             playerHands[0].GetCard(dealtCard);
-            CreateCard(dealtCard.Face);
+            CreatePlayerCard(dealtCard.Face);
 
             dealtCard = deck.DealCard();
             houseHand[0].GetCard(dealtCard);
-            CreateCard(dealtCard.Face);
+            CreateHouseCard(dealtCard.Face);
         }
     }
 
@@ -67,12 +82,14 @@ public class GameManager : MonoBehaviour
     {
         dealtCard = deck.DealCard();
         playerHands[0].GetCard(dealtCard);
-        CreateCard(dealtCard.Face);
+        CreatePlayerCard(dealtCard.Face);
+        CheckHand();
     }
 
     public void Stand()
     {
         ComputerPlay();
+        CheckHand();
     }
 
     private void ComputerPlay()
@@ -81,7 +98,7 @@ public class GameManager : MonoBehaviour
         {
             dealtCard = deck.DealCard();
             houseHand[0].GetCard(dealtCard);
-            CreateCard(dealtCard.Face);
+            CreateHouseCard(dealtCard.Face);
         }
         if(houseHand[0].handValue > playerHands[0].handValue && houseHand[0].handValue <= 21)
         {
@@ -93,9 +110,36 @@ public class GameManager : MonoBehaviour
         }
         NewHand();
     }
-   private void CreateCard(Sprite sprite)
-    {
-        SpriteRenderer cardDisplay = Instantiate(cardRenderer, new Vector3(0, 0, -1), Quaternion.identity);
+    
+    private void CreatePlayerCard(Sprite sprite)
+    { 
+        Vector3 playerOffset = new (playerDisplay.position.x + displaySpacing * playerCardCount , playerDisplay.position.y, playerDisplay.position.z);
+        SpriteRenderer cardDisplay = Instantiate(cardRenderer, playerOffset, Quaternion.identity);
         cardDisplay.sprite = sprite;
+        playerCardCount += 1;
+    }
+
+    private void CreateHouseCard(Sprite sprite)
+    {
+        Vector3 houseOffset = new (houseDisplay.position.x + displaySpacing * houseCardCount, houseDisplay.position.y, houseDisplay.position.z);
+        SpriteRenderer cardDisplay = Instantiate(cardRenderer, houseOffset, Quaternion.identity);
+        cardDisplay.sprite = sprite;
+        houseCardCount += 1;
+    }
+
+    private void CheckHand()
+    {
+        if (playerHands[0].handValue > 21)
+        {
+            Bust();
+        }
+        else if (playerHands[0].handValue == 21)
+        {
+            Blackjack();
+        }
+        else
+        {
+            //Debug.Log("Player Hand: " + playerHands[0].handValue);
+        }
     }
 }
