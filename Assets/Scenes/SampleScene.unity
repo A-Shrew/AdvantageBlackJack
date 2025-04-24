@@ -640,7 +640,7 @@ MonoBehaviour:
   houseDisplay: {fileID: 1470597752}
   playerDisplay: {fileID: 1350964615}
   deckSize: 1
-  displaySpacing: 0.5
+  displaySpacing: 0.25
 --- !u!4 &589749809
 Transform:
   m_ObjectHideFlags: 0
