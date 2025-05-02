@@ -73,4 +73,13 @@ public class Card
             return texture;
         }
     }
+
+    public Sprite BackFace
+    {
+        get
+        {
+            Sprite texture = Resources.Load<Sprite>("Card Back 3");
+            return texture;
+        }
+    }
 }
